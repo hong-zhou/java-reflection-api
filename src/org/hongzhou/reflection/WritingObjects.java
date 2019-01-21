@@ -1,7 +1,5 @@
 package org.hongzhou.reflection;
 
-import java.sql.SQLException;
-
 import org.hongzhou.reflection.model.Person;
 import org.hongzhou.reflection.orm.EntityManager;
 

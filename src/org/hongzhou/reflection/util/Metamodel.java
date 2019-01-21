@@ -9,15 +9,15 @@ import java.util.stream.IntStream;
 import org.hongzhou.reflection.annotation.Column;
 import org.hongzhou.reflection.annotation.PrimaryKey;
 
-public class Metamodel<T> {
+public class Metamodel {
 
-	private Class<T> clazz;
+	private Class<?> clazz;
 
-	public static <T> Metamodel<T> of(Class<T> clazz) {
-		return new Metamodel<>(clazz);
+	public static Metamodel of(Class<?> clazz) {
+		return new Metamodel(clazz);
 	}
 
-	public Metamodel(Class<T> clazz) {
+	public Metamodel(Class<?> clazz) {
 		this.clazz = clazz;
 	}
 
@@ -51,27 +51,33 @@ public class Metamodel<T> {
 		// insert into Person (id, name, age) value (?, ?, ?)
 		String columnElement = buildColumnNames();
 		String questionMarksElement = buildQuestionMarksElement();
-		
-		return "insert into " + this.clazz.getSimpleName() + 
-				" (" + columnElement + ") values (" + questionMarksElement + ")";
+
+		return "insert into " + this.clazz.getSimpleName() + " (" + columnElement + ") values (" + questionMarksElement
+				+ ")";
 	}
 
+	public String buildSelectRequest() {
+		// select id, name, age from Person where id = ?
+		String columnElement = buildColumnNames();
+		return "select " + columnElement + " from " + this.clazz.getSimpleName() + " where " + getPrimaryKey().getName()
+				+ " = ?";
+	}
+	
 	private String buildQuestionMarksElement() {
 		int numberOfColumns = getColumns().size() + 1;
-		String questionMarksElement = 
-				IntStream.range(0, numberOfColumns)
-					.mapToObj(index -> "?")
-					.collect(Collectors.joining(", "));
+		String questionMarksElement = IntStream.range(0, numberOfColumns).mapToObj(index -> "?")
+				.collect(Collectors.joining(", "));
 		return questionMarksElement;
 	}
 
 	private String buildColumnNames() {
 		String primaryKeyColumnName = getPrimaryKey().getName();
-		List<String> columnNames = 
-				getColumns().stream().map(ColumnField::getName).collect(Collectors.toList());
+		List<String> columnNames = getColumns().stream().map(ColumnField::getName).collect(Collectors.toList());
 		columnNames.add(0, primaryKeyColumnName);
 		String columnElement = String.join(", ", columnNames);
 		return columnElement;
 	}
+
+
 
 }
