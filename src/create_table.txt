@@ -1,5 +1,6 @@
+drop table if exists person;
 create table Person(
-id int primary key,
-age int,
-name varchar(40)
+k_id int primary key,
+c_age int,
+c_name varchar(40)
 )

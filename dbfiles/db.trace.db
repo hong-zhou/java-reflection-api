@@ -107,3 +107,61 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:C:/Users/zhs
 2019-01-20 20:55:47 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "SELECT ID, NAME, AGE FROM PERSON WHERE ID ?[*] "; SQL statement:
 select id, name, age from Person where id ? [42000-197]
+2019-01-20 21:30:42 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "DROP PERSON[*] TABLE IF EXISTS TEST "; expected "TABLE, INDEX, USER, SEQUENCE, CONSTANT, TRIGGER, VIEW, ROLE, ALIAS, SCHEMA, ALL, DOMAIN, TYPE, DATATYPE, AGGREGATE, SYNONYM"; SQL statement:
+DROP Person TABLE IF EXISTS TEST [42001-197]
+2019-01-20 21:30:57 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "PERSON" already exists; SQL statement:
+create table Person(
+k_id int primary key,
+c_age int,
+c_name varchar(40)
+) [42101-197]
+2019-01-20 21:31:26 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "DROP TABLE IF EXISTS [*]"; expected "identifier"; SQL statement:
+drop table if exists [42001-197]
+2019-01-20 21:31:26 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "PERSON" already exists; SQL statement:
+create table Person(
+k_id int primary key,
+c_age int,
+c_name varchar(40)
+) [42101-197]
+2019-01-20 21:32:28 database: flush
+org.h2.message.DbException: General error: "java.lang.IllegalStateException: The file is locked: nio:C:/Users/zhsnn/Documents/workspace-spring-tool-suite-4-4.0.0.RELEASE/JavaReflectionApi/dbfiles/db.mv.db [1.4.197/7]" [50000-197]
+	at org.h2.message.DbException.get(DbException.java:168)
+	at org.h2.message.DbException.convert(DbException.java:307)
+	at org.h2.mvstore.db.MVTableEngine$1.uncaughtException(MVTableEngine.java:95)
+	at org.h2.mvstore.MVStore.handleException(MVStore.java:2506)
+	at org.h2.mvstore.MVStore.panic(MVStore.java:383)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:364)
+	at org.h2.mvstore.MVStore$Builder.open(MVStore.java:2934)
+	at org.h2.mvstore.db.MVTableEngine$Store.open(MVTableEngine.java:155)
+	at org.h2.mvstore.db.MVTableEngine.init(MVTableEngine.java:100)
+	at org.h2.engine.Database.getPageStore(Database.java:2538)
+	at org.h2.engine.Database.open(Database.java:709)
+	at org.h2.engine.Database.openDatabase(Database.java:286)
+	at org.h2.engine.Database.<init>(Database.java:280)
+	at org.h2.engine.Engine.openSession(Engine.java:66)
+	at org.h2.engine.Engine.openSession(Engine.java:179)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:157)
+	at org.h2.engine.Engine.createSession(Engine.java:140)
+	at org.h2.engine.Engine.createSession(Engine.java:28)
+	at org.h2.engine.SessionRemote.connectEmbeddedOrServer(SessionRemote.java:351)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:124)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:103)
+	at org.h2.Driver.connect(Driver.java:69)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at org.hongzhou.reflection.orm.H2EntityManager.buildConnection(H2EntityManager.java:10)
+	at org.hongzhou.reflection.orm.AbstractEntityManager.prepareStatementWith(AbstractEntityManager.java:28)
+	at org.hongzhou.reflection.orm.AbstractEntityManager.persist(AbstractEntityManager.java:22)
+	at org.hongzhou.reflection.WritingObjects.main(WritingObjects.java:23)
+Caused by: org.h2.jdbc.JdbcSQLException: General error: "java.lang.IllegalStateException: The file is locked: nio:C:/Users/zhsnn/Documents/workspace-spring-tool-suite-4-4.0.0.RELEASE/JavaReflectionApi/dbfiles/db.mv.db [1.4.197/7]" [50000-197]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:357)
+	... 28 more
+Caused by: java.lang.IllegalStateException: The file is locked: nio:C:/Users/zhsnn/Documents/workspace-spring-tool-suite-4-4.0.0.RELEASE/JavaReflectionApi/dbfiles/db.mv.db [1.4.197/7]
+	at org.h2.mvstore.DataUtils.newIllegalStateException(DataUtils.java:870)
+	at org.h2.mvstore.FileStore.open(FileStore.java:173)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:350)
+	... 22 more

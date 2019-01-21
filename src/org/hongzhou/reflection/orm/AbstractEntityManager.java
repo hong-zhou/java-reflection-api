@@ -3,7 +3,6 @@ package org.hongzhou.reflection.orm;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.hongzhou.reflection.util.ColumnField;
 import org.hongzhou.reflection.util.Metamodel;
 
-public class EntityManagerImpl<T> implements EntityManager<T> {
+public abstract class AbstractEntityManager<T> implements EntityManager<T> {
 
 	private AtomicLong idGenerator = new AtomicLong(0L);
 
@@ -20,19 +19,19 @@ public class EntityManagerImpl<T> implements EntityManager<T> {
 	public void persist(T t) throws SQLException, IllegalArgumentException, IllegalAccessException {
 		Metamodel metamodel = Metamodel.of(t.getClass());
 		String sql = metamodel.buildInsertRequest();
-		PreparedStatement statement = prepareStatementWith(sql).andParameters(t);
-		statement.executeUpdate();
-
+		try (PreparedStatement statement = prepareStatementWith(sql).andParameters(t);) {
+			statement.executeUpdate();
+		}
 	}
 
 	private PrepareStatementWrapper prepareStatementWith(String sql) throws SQLException {
-		Connection connection = DriverManager.getConnection(
-				"jdbc:h2:C:\\Users\\zhsnn\\Documents\\workspace-spring-tool-suite-4-4.0.0.RELEASE\\JavaReflectionApi\\dbfiles\\db",
-				"sa", "");
+		Connection connection = buildConnection();
 		PreparedStatement statement = connection.prepareStatement(sql);
 
 		return new PrepareStatementWrapper(statement);
 	}
+
+	public abstract Connection buildConnection() throws SQLException;
 
 	private class PrepareStatementWrapper {
 		private PreparedStatement statement;
